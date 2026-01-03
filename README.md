@@ -7,6 +7,9 @@ casino slot machine widget for KDE Plasma 6 desktop.
 ## Installation
 
 ### From Source
+>[!TIP]
+>For debugging download plasma-sdk
+
 >[!IMPORTANT]
 >Download latest release
 
@@ -15,5 +18,4 @@ cd plasma-slot-machine
 mkdir -p ~/.local/share/plasma/plasmoids/org.kde.onedarmbandit
 cp -r . ~/.local/share/plasma/plasmoids/org.kde.onedarmbandit/
 
->[!TIP]
->For debugging download plasma-sdk
+
