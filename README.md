@@ -15,5 +15,5 @@ cd plasma-slot-machine
 mkdir -p ~/.local/share/plasma/plasmoids/org.kde.onedarmbandit
 cp -r . ~/.local/share/plasma/plasmoids/org.kde.onedarmbandit/
 
-> [!TIP]
-> For debugging download plasma-sdk
+>[!TIP]
+>For debugging download plasma-sdk
