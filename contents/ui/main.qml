@@ -270,7 +270,7 @@ PlasmoidItem {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 30
                         radius: 6
-                        color: bet < Math.min(credits, 100) && !spinning && !gameOver ? "#10b981" : "#475569"
+                        color: bet < credits && !spinning && !gameOver ? "#10b981" : "#475569"
 
                         Text {
                             anchors.centerIn: parent
@@ -282,9 +282,9 @@ PlasmoidItem {
 
                         MouseArea {
                             anchors.fill: parent
-                            enabled: bet < Math.min(credits, 100) && !spinning && !gameOver
+                            enabled: bet < credits && !spinning && !gameOver
                             onClicked: {
-                                var maxBet = Math.min(credits, 100);
+                                var maxBet = credits;
                                 if (bet < maxBet) {
                                     bet = Math.min(maxBet, bet + 5);
                                 }
@@ -310,7 +310,7 @@ PlasmoidItem {
                         MouseArea {
                             anchors.fill: parent
                             enabled: credits > 0 && !spinning && !gameOver
-                            onClicked: bet = Math.min(credits, 1000)
+                            onClicked: bet = credits
                         }
                     }
                 }
