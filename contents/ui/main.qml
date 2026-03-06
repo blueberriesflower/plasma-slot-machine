@@ -52,14 +52,14 @@ PlasmoidItem {
     // Основной фон
     Rectangle {
         anchors.fill: parent
-        color: "#0f172a"
+        color: "#CA8DF2"
         radius: 16
 
         // Акцентная полоска сверху
         Rectangle {
             width: parent.width
             height: 4
-            color: "#fbbf24"
+            color: "#4962F2"
             anchors.top: parent.top
             anchors.topMargin: 15
         }
@@ -73,8 +73,8 @@ PlasmoidItem {
             // Заголовок
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: "🎰 CASINO SLOTS 🎰"
-                color: "#fbbf24"
+                text: "CASINO SLOTS"
+                color: "#4962F2"
                 font.pixelSize: 18
                 font.bold: true
                 font.letterSpacing: 1
@@ -84,10 +84,10 @@ PlasmoidItem {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 100
-                color: "#1e293b"
+                color: "#CA8DF2"
                 radius: 12
                 border.width: 2
-                border.color: spinning ? "#fbbf24" : "#334155"
+                border.color: spinning ? "#8DD5F2" : "#EEDFF2"
 
                 Row {
                     anchors.centerIn: parent
@@ -98,9 +98,9 @@ PlasmoidItem {
                         width: 70
                         height: 70
                         radius: 10
-                        color: "#0f172a"
+                        color: "#9F79F2"
                         border.width: 3
-                        border.color: spinning ? "#fbbf24" : "#475569"
+                        border.color: spinning ? "#4962F2" : "#742BD9"
 
                         Text {
                             anchors.centerIn: parent
@@ -115,9 +115,9 @@ PlasmoidItem {
                         width: 70
                         height: 70
                         radius: 10
-                        color: "#0f172a"
+                        color: "#9F79F2"
                         border.width: 3
-                        border.color: spinning ? "#fbbf24" : "#475569"
+                        border.color: spinning ? "#4962F2" : "#742BD9"
 
                         Text {
                             anchors.centerIn: parent
@@ -132,9 +132,9 @@ PlasmoidItem {
                         width: 70
                         height: 70
                         radius: 10
-                        color: "#0f172a"
+                        color: "#9F79F2"
                         border.width: 3
-                        border.color: spinning ? "#fbbf24" : "#475569"
+                        border.color: spinning ? "#4962F2" : "#742BD9"
 
                         Text {
                             anchors.centerIn: parent
@@ -160,14 +160,14 @@ PlasmoidItem {
 
                     Text {
                         text: "BALANCE"
-                        color: "#94a3b8"
+                        color: "#4962F2"
                         font.pixelSize: 12
                         font.bold: true
                     }
 
                     Text {
                         text: "$" + credits
-                        color: credits > 100 ? "#10b981" : credits > 50 ? "#fbbf24" : "#ef4444"
+                        color: credits > 100 ? "#80D2F2" : credits > 50 ? "#CA8DF2" : "#9F79F2"
                         font.pixelSize: 20
                         font.bold: true
                     }
@@ -180,14 +180,14 @@ PlasmoidItem {
 
                     Text {
                         text: "CURRENT BET"
-                        color: "#94a3b8"
+                        color: "#4962F2"
                         font.pixelSize: 12
                         font.bold: true
                     }
 
                     Text {
                         text: "$" + bet
-                        color: "#fbbf24"
+                        color: "#80D2F2"
                         font.pixelSize: 20
                         font.bold: true
                     }
@@ -200,7 +200,7 @@ PlasmoidItem {
 
                     Text {
                         text: "STATUS"
-                        color: "#94a3b8"
+                        color: "#4962F2"
                         font.pixelSize: 12
                         font.bold: true
                     }
@@ -208,8 +208,8 @@ PlasmoidItem {
                     Text {
                         text: spinning ? "SPINNING..." :
                         gameOver ? "GAME OVER" : "READY"
-                        color: spinning ? "#8b5cf6" :
-                        gameOver ? "#ef4444" : "#10b981"
+                        color: spinning ? "#742BD9" :
+                        gameOver ? "#742BD9" : "#742BD9"
                         font.pixelSize: 14
                         font.bold: true
                     }
@@ -220,7 +220,7 @@ PlasmoidItem {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 50
-                color: "#1e293b"
+                color: "#9F79F2"
                 radius: 10
 
                 RowLayout {
@@ -233,7 +233,7 @@ PlasmoidItem {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 30
                         radius: 6
-                        color: bet > 1 && !spinning && !gameOver ? "#ef4444" : "#475569"
+                        color: bet > 1 && !spinning && !gameOver ? "#8b5cf6" : "#8b5cf6"
 
                         Text {
                             anchors.centerIn: parent
@@ -259,7 +259,7 @@ PlasmoidItem {
                     // Отображение ставки
                     Text {
                         text: "BET: $" + bet
-                        color: "#fbbf24"
+                        color: "#80D2F2"
                         font.pixelSize: 15
                         font.bold: true
                         Layout.alignment: Qt.AlignVCenter
@@ -270,7 +270,7 @@ PlasmoidItem {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 30
                         radius: 6
-                        color: bet < credits && !spinning && !gameOver ? "#10b981" : "#475569"
+                        color: bet < credits && !spinning && !gameOver ? "#8b5cf6" : "#8b5cf6"
 
                         Text {
                             anchors.centerIn: parent
@@ -297,7 +297,7 @@ PlasmoidItem {
                         Layout.preferredWidth: 60
                         Layout.preferredHeight: 30
                         radius: 6
-                        color: credits > 0 && !spinning && !gameOver ? "#8b5cf6" : "#475569"
+                        color: credits > 0 && !spinning && !gameOver ? "#8b5cf6" : "#9F79F2"
 
                         Text {
                             anchors.centerIn: parent
@@ -324,8 +324,8 @@ PlasmoidItem {
                 color: {
                     if (spinning) return "#8b5cf6";
                     if (gameOver) return "#3b82f6";
-                    if (credits >= bet) return "#dc2626";
-                    return "#475569";
+                    if (credits >= bet) return "#9F79F2";
+                    return "#4962F2";
                 }
 
                 Text {
@@ -359,23 +359,23 @@ PlasmoidItem {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
-                color: "#1e293b"
+                color: "#9F79F2"
                 radius: 8
                 border.width: 2
-                border.color: result.includes("JACKPOT") ? "#fbbf24" :
-                result.includes("WIN") ? "#10b981" :
+                border.color: result.includes("JACKPOT") ? "#4962F2" :
+                result.includes("WIN") ? "#4951F2" :
                 result.includes("MATCH") ? "#3b82f6" :
-                gameOver ? "#ef4444" : "#334155"
+                gameOver ? "#DC8DF2" : "#EAAEF2"
 
                 Text {
                     anchors.centerIn: parent
                     text: result || (gameOver ? "💀 GAME OVER" : "")
                     color: {
-                        if (gameOver) return "#ef4444";
-                        if (result.includes("JACKPOT")) return "#fbbf24";
-                        if (result.includes("WIN")) return "#10b981";
+                        if (gameOver) return "#EAAEF2";
+                        if (result.includes("JACKPOT")) return "#4962F2";
+                        if (result.includes("WIN")) return "#4962F2";
                         if (result.includes("MATCH")) return "#3b82f6";
-                        return "#94a3b8";
+                        return "#EAAEF2";
                     }
                     font.pixelSize: 14
                     font.bold: true
@@ -394,8 +394,8 @@ PlasmoidItem {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "💸 Out of credits! Click RESTART above"
-                    color: "#fca5a5"
+                    text: "💸 Out of credits!"
+                    color: "#9F79F2"
                     font.pixelSize: 11
                     font.bold: true
                 }
