@@ -4,6 +4,8 @@ casino slot machine widget for KDE Plasma 6 desktop.
 
 [![fhbqgM7.md.png](https://iili.io/fhbqgM7.md.png)](https://freeimage.host/i/fhbqgM7)
 
+[![qI7ygd7.md.png](https://iili.io/qI7ygd7.md.png)](https://freeimage.host/i/qI7ygd7)
+
 ## Installation
 
 ### From Source
