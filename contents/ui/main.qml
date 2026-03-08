@@ -33,8 +33,8 @@ PlasmoidItem {
     property int bombsLeft: 3
     property bool bonusGameOver: false
     property string bonusMessage: ""
-    property var berryStates: []
-    property var berryWasBomb: []
+    property var berryStates: [false, false, false, false, false, false, false, false]
+    property var berryWasBomb: [false, false, false, false, false, false, false, false]
 
     // Animation
     property real glowIntensity: 0
@@ -116,6 +116,7 @@ PlasmoidItem {
             showBerryBonus = false
             berryBonusWindow.visible = false
             bonusGameActive = false
+            resetBonusGame()
         }
     }
 
@@ -126,6 +127,7 @@ PlasmoidItem {
             showBerryBonus = false
             berryBonusWindow.visible = false
             bonusGameActive = false
+            resetBonusGame()
         }
     }
 
@@ -193,7 +195,6 @@ PlasmoidItem {
                 buttonText: getHarmoniousContrast("#742BD9", true)
             }
 
-            // Добавляем гармоничные контрастные цвета
             pastelColors.onAccent = getHarmoniousContrast(pastelColors.accent, getBrightness(pastelColors.accent) < 128)
             pastelColors.onPrimary = getHarmoniousContrast(pastelColors.primary, getBrightness(pastelColors.primary) < 128)
             pastelColors.onHighlight = getHarmoniousContrast(pastelColors.highlight, getBrightness(pastelColors.highlight) < 128)
@@ -222,7 +223,6 @@ PlasmoidItem {
 
             return standardColors
         } else {
-            // Custom theme
             var color = customColor
             var brightness = getBrightness(color)
             var isDark = brightness < 128
@@ -230,7 +230,6 @@ PlasmoidItem {
             var customColors
 
             if (isDark) {
-                // Для темных цветов
                 customColors = {
                     bgStart: adjustBrightness(color, 0.8),
                     bgEnd: adjustBrightness(color, 1.0),
@@ -243,7 +242,6 @@ PlasmoidItem {
                     buttonText: getHarmoniousContrast(adjustBrightness(color, 0.9), true)
                 }
             } else {
-                // Для светлых цветов
                 customColors = {
                     bgStart: adjustBrightness(color, 0.7),
                     bgEnd: adjustBrightness(color, 0.9),
@@ -257,7 +255,6 @@ PlasmoidItem {
                 }
             }
 
-            // Добавляем гармоничные контрастные цвета для всех элементов
             customColors.onAccent = getHarmoniousContrast(customColors.accent, getBrightness(customColors.accent) < 128)
             customColors.onPrimary = getHarmoniousContrast(customColors.primary, getBrightness(customColors.primary) < 128)
             customColors.onHighlight = getHarmoniousContrast(customColors.highlight, getBrightness(customColors.highlight) < 128)
@@ -434,13 +431,12 @@ PlasmoidItem {
                 }
             }
 
-            // Info panel - ПРОСТО И КРАСИВО
+            // Info panel
             GridLayout {
                 Layout.fillWidth: true
                 columns: freeSpins > 0 ? 3 : 2
                 columnSpacing: 5 * uiScale
 
-                // BALANCE
                 Column {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignCenter
@@ -462,7 +458,6 @@ PlasmoidItem {
                     }
                 }
 
-                // BET
                 Column {
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignCenter
@@ -495,12 +490,11 @@ PlasmoidItem {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: if (!spinning && !gameOver) betWindow.visible = true
+                            onClicked: if (!spinning && !gameOver && !bonusGameActive) betWindow.visible = true
                         }
                     }
                 }
 
-                // FREE SPINS
                 Column {
                     Layout.fillWidth: true
                     visible: freeSpins > 0
@@ -533,7 +527,7 @@ PlasmoidItem {
                     model: ["-10", "½", "2x", "+10", "MAX"]
 
                     Rectangle {
-                        width: (parent.width - 20 * uiScale) / 5  // ширина родителя минус отступы, деленная на 5
+                        width: (parent.width - 20 * uiScale) / 5
                         height: 35 * uiScale
                         border.width: 2
                         border.color: colors.light
@@ -542,7 +536,7 @@ PlasmoidItem {
                         opacity: enabled ? 1 : 0.5
 
                         property bool enabled: {
-                            if (spinning || gameOver) return false
+                            if (spinning || gameOver || bonusGameActive) return false
                                 if (modelData === "MAX") return credits > 0
                                     if (modelData === "2x") return bet * 2 <= credits
                                         if (modelData.startsWith("+")) return bet + parseInt(modelData) <= credits
@@ -574,7 +568,6 @@ PlasmoidItem {
                 }
             }
 
-
             // SPIN button
             Rectangle {
                 Layout.fillWidth: true
@@ -597,7 +590,7 @@ PlasmoidItem {
 
                 MouseArea {
                     anchors.fill: parent
-                    enabled: gameOver || (!spinning && (credits >= bet || freeSpins > 0))
+                    enabled: gameOver || (!spinning && !bonusGameActive && (credits >= bet || freeSpins > 0))
                     onClicked: {
                         if (gameOver) {
                             credits = 200
@@ -681,7 +674,6 @@ PlasmoidItem {
                 width: parent.width - 20
                 spacing: 12
 
-                // UI SCALE
                 Text {
                     text: "UI SCALE"
                     color: colors.onLight
@@ -764,7 +756,6 @@ PlasmoidItem {
                     }
                 }
 
-                // BONUS GAME TOGGLE
                 Text {
                     text: "BONUS GAME"
                     color: colors.onLight
@@ -828,7 +819,6 @@ PlasmoidItem {
                     font.italic: true
                 }
 
-                // COLOR THEME
                 Text {
                     text: "COLOR THEME"
                     color: colors.onLight
@@ -836,7 +826,6 @@ PlasmoidItem {
                     font.pixelSize: 13
                 }
 
-                // Theme buttons
                 Flow {
                     Layout.fillWidth: true
                     spacing: 8
@@ -914,7 +903,6 @@ PlasmoidItem {
                     }
                 }
 
-                // Color picker (only when custom)
                 ColumnLayout {
                     Layout.fillWidth: true
                     visible: colorTheme === "custom"
@@ -927,7 +915,6 @@ PlasmoidItem {
                         font.pixelSize: 11
                     }
 
-                    // Color presets grid
                     Flow {
                         Layout.fillWidth: true
                         spacing: 6
@@ -956,7 +943,6 @@ PlasmoidItem {
                         }
                     }
 
-                    // Custom color input
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 5
@@ -1018,7 +1004,6 @@ PlasmoidItem {
                     }
                 }
 
-                // CLOSE button
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
@@ -1127,126 +1112,83 @@ PlasmoidItem {
 
         property real scaleFactor: Math.min(width / 650, height / 750, 1.0)
 
+        // Обработка закрытия крестиком
+        onClosing: {
+            winTimer.stop()
+            closeTimer.stop()
+            var win = currentWin
+            var collected = berriesCollected
+            var gameOverFlag = bonusGameOver
+            if (collected > 0 && !gameOverFlag) {
+                credits += win
+                result = "🍓 Cashed out $" + win
+            } else if (!gameOverFlag) {
+                result = "😢 Bonus game skipped"
+            }
+            showBerryBonus = false
+            bonusGameActive = false
+            resetBonusGame()
+        }
+
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 15 * berryBonusWindow.scaleFactor
             spacing: 10 * berryBonusWindow.scaleFactor
 
-            // Header
+            // Header (без изменений)
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 15 * berryBonusWindow.scaleFactor
-
-                Text {
-                    text: "🍓"
-                    color: colors.text
-                    font.pixelSize: 50 * berryBonusWindow.scaleFactor
-                }
-
+                Text { text: "🍓"; color: colors.text; font.pixelSize: 50 * berryBonusWindow.scaleFactor }
                 Column {
                     Layout.alignment: Qt.AlignHCenter
-                    Text {
-                        text: "STRAWBERRY BOMB"
-                        color: colors.highlight
-                        font.pixelSize: 22 * berryBonusWindow.scaleFactor
-                        font.bold: true
-                    }
-                    Text {
-                        text: "5 sweet 🍓 | 3 rotten 💣"
-                        color: colors.accent
-                        font.pixelSize: 12 * berryBonusWindow.scaleFactor
-                    }
+                    Text { text: "STRAWBERRY BOMB"; color: colors.highlight; font.pixelSize: 22 * berryBonusWindow.scaleFactor; font.bold: true }
+                    Text { text: "5 sweet 🍓 | 3 rotten 💣"; color: colors.accent; font.pixelSize: 12 * berryBonusWindow.scaleFactor }
                 }
-
-                Text {
-                    text: "💣"
-                    color: colors.text
-                    font.pixelSize: 50 * berryBonusWindow.scaleFactor
-                }
+                Text { text: "💣"; color: colors.text; font.pixelSize: 50 * berryBonusWindow.scaleFactor }
             }
 
-            // Status panel
+            // Status panel (без изменений)
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 60 * berryBonusWindow.scaleFactor
                 color: colors.button
                 radius: 10 * berryBonusWindow.scaleFactor
-
                 RowLayout {
                     anchors.fill: parent
                     anchors.margins: 8 * berryBonusWindow.scaleFactor
                     spacing: 10 * berryBonusWindow.scaleFactor
-
                     Column {
                         Layout.fillWidth: true
-                        Text {
-                            text: "🍓 " + berriesCollected + "/5"
-                            color: colors.buttonText
-                            font.pixelSize: 18 * berryBonusWindow.scaleFactor
-                            font.bold: true
-                        }
-                        Text {
-                            text: "COLLECTED"
-                            color: colors.buttonText
-                            opacity: 0.7
-                            font.pixelSize: 9 * berryBonusWindow.scaleFactor
-                        }
+                        Text { text: "🍓 " + berriesCollected + "/5"; color: colors.buttonText; font.pixelSize: 18 * berryBonusWindow.scaleFactor; font.bold: true }
+                        Text { text: "COLLECTED"; color: colors.buttonText; opacity: 0.7; font.pixelSize: 9 * berryBonusWindow.scaleFactor }
                     }
-
                     Column {
                         Layout.fillWidth: true
-                        Text {
-                            text: "💣 " + bombsLeft
-                            color: getHarmoniousContrast("#FF4444", true)
-                            font.pixelSize: 18 * berryBonusWindow.scaleFactor
-                            font.bold: true
-                        }
-                        Text {
-                            text: "ROTTEN LEFT"
-                            color: colors.buttonText
-                            opacity: 0.7
-                            font.pixelSize: 9 * berryBonusWindow.scaleFactor
-                        }
+                        Text { text: "💣 " + bombsLeft; color: getHarmoniousContrast("#FF4444", true); font.pixelSize: 18 * berryBonusWindow.scaleFactor; font.bold: true }
+                        Text { text: "ROTTEN LEFT"; color: colors.buttonText; opacity: 0.7; font.pixelSize: 9 * berryBonusWindow.scaleFactor }
                     }
-
                     Column {
                         Layout.fillWidth: true
-                        Text {
-                            text: "$" + currentWin
-                            color: colors.accent
-                            font.pixelSize: 18 * berryBonusWindow.scaleFactor
-                            font.bold: true
-                        }
-                        Text {
-                            text: "CURRENT"
-                            color: colors.buttonText
-                            opacity: 0.7
-                            font.pixelSize: 9 * berryBonusWindow.scaleFactor
-                        }
+                        Text { text: "$" + currentWin; color: colors.accent; font.pixelSize: 18 * berryBonusWindow.scaleFactor; font.bold: true }
+                        Text { text: "CURRENT"; color: colors.buttonText; opacity: 0.7; font.pixelSize: 9 * berryBonusWindow.scaleFactor }
                     }
                 }
             }
 
-            // Game area
+            // Game area — используем состояния
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: parent.height * 0.55
                 color: colors.button
                 radius: 15 * berryBonusWindow.scaleFactor
-                border.width: 2
-                border.color: colors.accent
+                border.width: 2; border.color: colors.accent
 
-                // Decorative strawberry in corner
                 Text {
-                    x: 10 * berryBonusWindow.scaleFactor
-                    y: 10 * berryBonusWindow.scaleFactor
-                    text: "🍓"
-                    color: colors.buttonText
-                    opacity: 0.3
-                    font.pixelSize: 40 * berryBonusWindow.scaleFactor
+                    x: 10 * berryBonusWindow.scaleFactor; y: 10 * berryBonusWindow.scaleFactor
+                    text: "🍓"; color: colors.buttonText; opacity: 0.3; font.pixelSize: 40 * berryBonusWindow.scaleFactor
                 }
 
-                // Berries grid
                 Grid {
                     anchors.centerIn: parent
                     columns: 4
@@ -1255,142 +1197,124 @@ PlasmoidItem {
                     Repeater {
                         model: 8
 
-                        // Container for animation
+                        // Элемент ягоды с состояниями
                         Item {
+                            id: berryItem
                             width: 70 * berryBonusWindow.scaleFactor
                             height: 70 * berryBonusWindow.scaleFactor
 
-                            // Main berry
+                            // Вычисляем состояние на основе массивов
+                            state: {
+                                if (!root.berryStates[index]) return "hidden"
+                                    return root.berryWasBomb[index] ? "bomb" : "sweet"
+                            }
+
                             Rectangle {
                                 id: berryRect
                                 anchors.fill: parent
                                 radius: width / 2
-                                color: {
-                                    if (berryStates[index]) {
-                                        return berryWasBomb[index] ? "#FF4444" : "#FF69B4"
-                                    }
-                                    return colors.light
-                                }
                                 border.width: 3
-                                border.color: {
-                                    if (berryStates[index]) {
-                                        return berryWasBomb[index] ? "#FF0000" : "#FF1493"
-                                    }
-                                    return colors.accent
-                                }
-
-                                // Text inside
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: {
-                                        if (berryStates[index]) {
-                                            return berryWasBomb[index] ? "💥" : "✓"
-                                        }
-                                        return "🍓"
-                                    }
-                                    color: {
-                                        if (berryStates[index]) {
-                                            return berryWasBomb[index] ?
-                                            getHarmoniousContrast("#FF4444", true) :
-                                            getHarmoniousContrast("#FF69B4", true)
-                                        }
-                                        return colors.onLight
-                                    }
-                                    font.pixelSize: 40 * berryBonusWindow.scaleFactor
-                                }
-
-                                // Animation for sweet berry
-                                SequentialAnimation {
-                                    id: sweetBerryAnim
-                                    running: false
-
-                                    PropertyAnimation {
-                                        target: berryRect
-                                        property: "scale"
-                                        from: 1.0
-                                        to: 1.3
-                                        duration: 150
-                                    }
-                                    PropertyAnimation {
-                                        target: berryRect
-                                        property: "scale"
-                                        from: 1.3
-                                        to: 1.0
-                                        duration: 150
-                                    }
-                                    PropertyAnimation {
-                                        target: berryRect
-                                        property: "color"
-                                        to: "#FF69B4"
-                                        duration: 100
-                                    }
-                                }
-
-                                // Animation for rotten berry (bomb)
-                                SequentialAnimation {
-                                    id: rottenBerryAnim
-                                    running: false
-
-                                    ParallelAnimation {
-                                        PropertyAnimation {
-                                            target: berryRect
-                                            property: "scale"
-                                            from: 1.0
-                                            to: 1.8
-                                            duration: 200
-                                        }
-                                        PropertyAnimation {
-                                            target: berryRect
-                                            property: "rotation"
-                                            from: 0
-                                            to: 360
-                                            duration: 200
-                                        }
-                                        PropertyAnimation {
-                                            target: berryRect
-                                            property: "color"
-                                            to: "#FF4444"
-                                            duration: 100
-                                        }
-                                    }
-
-                                    PropertyAnimation {
-                                        target: berryRect
-                                        property: "opacity"
-                                        from: 1.0
-                                        to: 0.0
-                                        duration: 200
-                                    }
-
-                                    ScriptAction {
-                                        script: {
-                                            result = "💥 ROTTEN BERRY! You lost everything!"
-                                            bonusGameOver = true
-                                            closeTimer.start()
-                                        }
-                                    }
-                                }
                             }
+
+                            Text {
+                                id: berryText
+                                anchors.centerIn: parent
+                                font.pixelSize: 40 * berryBonusWindow.scaleFactor
+                            }
+
+                            states: [
+                                State {
+                                    name: "hidden"
+                                    PropertyChanges {
+                                        target: berryRect
+                                        color: colors.light
+                                        border.color: colors.accent
+                                        opacity: 1.0
+                                        rotation: 0
+                                    }
+                                    PropertyChanges {
+                                        target: berryText
+                                        text: "🍓"
+                                        color: colors.onLight
+                                    }
+                                },
+                                State {
+                                    name: "sweet"
+                                    PropertyChanges {
+                                        target: berryRect
+                                        color: "#FF69B4"
+                                        border.color: "#FF1493"
+                                    }
+                                    PropertyChanges {
+                                        target: berryText
+                                        text: "✓"
+                                        color: "white"
+                                    }
+                                },
+                                State {
+                                    name: "bomb"
+                                    PropertyChanges {
+                                        target: berryRect
+                                        color: "#FF4444"
+                                        border.color: "#FF0000"
+                                    }
+                                    PropertyChanges {
+                                        target: berryText
+                                        text: "💥"
+                                        color: "white"
+                                    }
+                                }
+                            ]
+
+                            transitions: [
+                                Transition {
+                                    from: "hidden"; to: "sweet"
+                                    SequentialAnimation {
+                                        PropertyAnimation { target: berryRect; property: "scale"; from: 1.0; to: 1.3; duration: 150 }
+                                        PropertyAnimation { target: berryRect; property: "scale"; from: 1.3; to: 1.0; duration: 150 }
+                                        ColorAnimation { target: berryRect; property: "color"; duration: 100 }
+                                    }
+                                },
+                                Transition {
+                                    from: "hidden"; to: "bomb"
+                                    ParallelAnimation {
+                                        PropertyAnimation { target: berryRect; property: "scale"; from: 1.0; to: 1.8; duration: 200 }
+                                        PropertyAnimation { target: berryRect; property: "rotation"; from: 0; to: 360; duration: 200 }
+                                        ColorAnimation { target: berryRect; property: "color"; duration: 100 }
+                                    }
+                                    PropertyAnimation { target: berryRect; property: "opacity"; from: 1.0; to: 0.0; duration: 200 }
+                                }
+                            ]
 
                             MouseArea {
                                 anchors.fill: parent
-                                enabled: !berryStates[index] && !bonusGameOver
+                                enabled: !root.berryStates[index] && !bonusGameOver
                                 onClicked: {
-                                    if (!bonusGameOver && !berryStates[index]) {
+                                    if (bonusGameOver || root.berryStates[index]) return
+
                                         var isRotten = Math.random() < (bombsLeft / berriesLeft)
 
-                                        berryStates[index] = true
+                                        // Обновляем массивы с созданием новых копий для реактивности
+                                        var newStates = root.berryStates.slice()
+                                        newStates[index] = true
+                                        root.berryStates = newStates
+
+                                        var newBombStates = root.berryWasBomb.slice()
+                                        newBombStates[index] = isRotten
+                                        root.berryWasBomb = newBombStates
+
+                                        // Уменьшаем общее количество оставшихся ягод
+                                        berriesLeft--
 
                                         if (isRotten) {
                                             bombsLeft--
-                                            berryWasBomb[index] = true
-                                            rottenBerryAnim.start()
+                                            // Сразу завершаем игру, блокируем клики
+                                            bonusGameOver = true
+                                            result = "💥 ROTTEN BERRY! You lost everything!"
+                                            closeTimer.start()
                                         } else {
                                             berriesCollected++
-                                            berriesLeft--
                                             currentWin = bet * berriesCollected
-                                            berryWasBomb[index] = false
-                                            sweetBerryAnim.start()
 
                                             if (berriesCollected === 5) {
                                                 bonusGameOver = true
@@ -1400,9 +1324,6 @@ PlasmoidItem {
                                                 winTimer.start()
                                             }
                                         }
-
-                                        berriesLeft--
-                                    }
                                 }
                             }
                         }
@@ -1410,12 +1331,11 @@ PlasmoidItem {
                 }
             }
 
-            // Control buttons
+            // Control buttons (без изменений, но убраны лишние анимации)
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 10 * berryBonusWindow.scaleFactor
 
-                // TAKE WINNINGS button
                 Rectangle {
                     Layout.fillWidth: true
                     height: 40 * berryBonusWindow.scaleFactor
@@ -1431,7 +1351,6 @@ PlasmoidItem {
                         font.pixelSize: 14 * berryBonusWindow.scaleFactor
                         font.bold: true
                         elide: Text.ElideRight
-                        maximumLineCount: 1
                     }
 
                     MouseArea {
@@ -1444,11 +1363,11 @@ PlasmoidItem {
                             showBerryBonus = false
                             berryBonusWindow.visible = false
                             bonusGameActive = false
+                            resetBonusGame()
                         }
                     }
                 }
 
-                // EXIT button
                 Rectangle {
                     Layout.preferredWidth: 80 * berryBonusWindow.scaleFactor
                     height: 40 * berryBonusWindow.scaleFactor
@@ -1466,15 +1385,16 @@ PlasmoidItem {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            berryBonusWindow.visible = false
-                            showBerryBonus = false
-                            bonusGameActive = false
                             if (berriesCollected > 0 && !bonusGameOver) {
                                 credits += currentWin
                                 result = "🍓 Cashed out $" + currentWin
                             } else {
                                 result = "😢 Bonus game skipped"
                             }
+                            showBerryBonus = false
+                            berryBonusWindow.visible = false
+                            bonusGameActive = false
+                            resetBonusGame()
                         }
                     }
                 }
@@ -1499,22 +1419,27 @@ PlasmoidItem {
             stopTimer.start()
     }
 
+    function resetBonusGame() {
+        console.log("Resetting bonus game")
+        berriesCollected = 0
+        berriesLeft = 8
+        bombsLeft = 3
+        currentWin = 0
+        bonusGameOver = false
+        bonusMessage = ""
+        berryStates = [false, false, false, false, false, false, false, false]
+        berryWasBomb = [false, false, false, false, false, false, false, false]
+        bonusMultiplier = 1
+    }
+
     function checkWin() {
         var winAmount = 0
 
-        // Bonus game (if enabled)
         if (enableBonusGame) {
             if (reels[0] === "🍓" || reels[1] === "🍓" || reels[2] === "🍓") {
                 if (reels.filter(s => s === "🍓").length >= 2) {
+                    resetBonusGame()
                     bonusGameActive = true
-                    berriesCollected = 0
-                    berriesLeft = 8
-                    bombsLeft = 3
-                    currentWin = 0
-                    bonusGameOver = false
-                    bonusMessage = ""
-                    berryStates = [false, false, false, false, false, false, false, false]
-                    berryWasBomb = [false, false, false, false, false, false, false, false]
                     showBerryBonus = true
                     berryBonusWindow.visible = true
                     result = "🍓 STRAWBERRY BOMB BONUS!"
@@ -1543,13 +1468,11 @@ PlasmoidItem {
             var strawberryCount = reels.filter(s => s === "🍓").length
             winAmount = bet * strawberryCount * 2
             result = "🍓 STRAWBERRIES! x" + strawberryCount + " = $" + winAmount
-        }
-        else if (reels.includes("🫐")) {
+        } else if (reels.includes("🫐")) {
             var blueberryCount = reels.filter(s => s === "🫐").length
             winAmount = bet * blueberryCount * bonusMultiplier
             result = "🫐 BLUEBERRIES! x" + blueberryCount + " = $" + winAmount
-        }
-        else if (reels[0] === reels[1] && reels[1] === reels[2]) {
+        } else if (reels[0] === reels[1] && reels[1] === reels[2]) {
             winAmount = bet * (reels[0] === "7️⃣" ? 50 : 10) * bonusMultiplier
             result = "💰 JACKPOT! x" + bonusMultiplier + " = $" + winAmount
         } else if (reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2]) {
