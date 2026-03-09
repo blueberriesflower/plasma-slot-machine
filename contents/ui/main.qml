@@ -8,6 +8,19 @@ import org.kde.plasma.plasmoid
 PlasmoidItem {
     id: root
 
+    // Сохранение настроек в конфигурацию Plasmoid
+    property string colorTheme: plasmoid.configuration.colorTheme || "standard"
+    onColorThemeChanged: plasmoid.configuration.colorTheme = colorTheme
+
+    property string customBaseColor: plasmoid.configuration.customBaseColor || "#4B53F2"
+    onCustomBaseColorChanged: plasmoid.configuration.customBaseColor = customBaseColor
+
+    property real uiScale: plasmoid.configuration.uiScale || 1.0
+    onUiScaleChanged: plasmoid.configuration.uiScale = uiScale
+
+    property bool enableBonusGame: plasmoid.configuration.enableBonusGame || false
+    onEnableBonusGameChanged: plasmoid.configuration.enableBonusGame = enableBonusGame
+
     property alias minimumWidth: root.implicitWidth
     property alias minimumHeight: root.implicitHeight
     implicitWidth: 500
@@ -43,10 +56,10 @@ PlasmoidItem {
     property int explodingBerry: -1
 
     // Settings
-    property real uiScale: 1.0
-    property string colorTheme: "standard"
-    property string customBaseColor: "#4B53F2"
-    property bool enableBonusGame: false
+    //property real uiScale: 1.0
+    //property string colorTheme: "standard"
+    //property string customBaseColor: "#4B53F2"
+    //property bool enableBonusGame: false
 
     // Timers
     Timer {
