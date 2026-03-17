@@ -30,5 +30,5 @@ cp -r . ~/.local/share/plasma/plasmoids/org.kde.onedarmbandit/
 >[!TIP]
 >For update
 ```bash
-plasmashell --replace &
+nohup plasmashell --replace &
 ```
